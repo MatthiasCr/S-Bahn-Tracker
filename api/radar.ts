@@ -8,13 +8,15 @@ const client = createClient(bvgProfile, userAgent)
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
-
         const {
-            north,
-            west,
-            south,
-            east,
+            north = "52.52411",
+            west = "13.30002",
+            south = "52.51942",
+            east = "13.41709",
             results = "5",
+            suburban = "true",
+            subway = "false",
+            regional = "false"
         } = req.query;
 
         const bbox = {
@@ -27,21 +29,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const opt = {
             results: parseInt(results as string, 10),
             products: {
-                suburban: true,
-                subway: false,
+                suburban: JSON.parse(suburban as string),
+                subway: JSON.parse(subway as string),
                 bus: false,
                 ferry: false,
-                regional: false,
+                regional: JSON.parse(regional as string),
                 tram: false,
                 express: false,
             },
         }
 
         const data = await client.radar(bbox, opt);
-
         return res.status(200).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500);
+        res.status(500).json({ error: "Internal Server Error", details: (err as Error).message });
     }
 }

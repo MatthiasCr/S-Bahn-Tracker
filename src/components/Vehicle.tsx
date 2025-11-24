@@ -1,16 +1,14 @@
 import { Circle, Popup } from 'react-leaflet';
-import { type Trip, type Movement } from '../services/api'
+import { type Movement } from '../services/api'
 
-function Vehicle({ trip }: { trip: Movement }) {
+function Vehicle({ movement }: { movement: Movement }) {
     return (
         <>
             <Circle
-                key={trip.trip_id}
-                center={[trip.location.latitude, trip.location.longitude]}
-                // pathOptions={{ color:  }}
+                center={[movement.location.latitude, movement.location.longitude]}
                 radius={150}
-            >{trip.line.name}
-                <Popup>{trip.line.name}<br />{trip.direction}</Popup>
+            >
+                <Popup>{movement.line.name}<br />{movement.direction}</Popup>
             </Circle>
         </>
     )

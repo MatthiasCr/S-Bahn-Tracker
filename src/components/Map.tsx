@@ -1,73 +1,24 @@
 import 'leaflet/dist/leaflet.css';
 import '../css/Map.css';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, LayerGroup, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, LayerGroup } from 'react-leaflet';
 import { type Movement, radar } from '../services/api'
 import { useState, useEffect } from 'react';
 import Vehicle from './Vehicle';
 
 function Map() {
-    // const [stations, setStations] = useState<Station[]>([]);
-    const [trips, setTrips] = useState<Movement[]>([]);
-
-    // useEffect(() => {
-    //     const fetchStations = async () => {
-    //         try {
-    //             const latitude = 52.517275;
-    //             const longitude = 13.381406;
-    //             const numberOfStations = 200;
-    //             const data = await getNearestStations(latitude, longitude, numberOfStations);
-    //             setStations(data);
-    //             console.log(data);
-
-    //         } catch (error) {
-    //             console.error('Unable to load stations', error);
-    //         }
-    //     };
-
-    //     fetchStations();
-    // }, []);
-
-    // useEffect(() => {
-    //     const fetchShape = async () => {
-    //         try {
-    //             const data = await getShape();
-    //             setShape(data);
-    //         } catch (error) {
-    //             console.error('Unable to load stations', error);
-    //         }
-    //     };
-    //     fetchShape();
-    // }, []);
-
-    // useEffect(() => {
-    //     const fetchTrips = async () => {
-    //         try {
-    //             const data = await getCurrentTrips();
-    //             setTrips(data.trips);
-    //             console.log(data.trips);
-    //         } catch (error) {
-    //             console.error('Unable to load stations', error);
-    //         }
-    //     };
-    //     fetchTrips();
-    // }, []);
+    const [movements, setMovements] = useState<Movement[]>([]);
 
     useEffect(() => {
-        const fetchTrips = async () => {
+        const fetchRadar = async () => {
             try {
                 const data = await radar();
-                setTrips(data);
-                console.log(data);
+                setMovements(data);
             } catch (error) {
-                console.error('Unable to load stations', error);
+                console.error('Unable to load radar', error);
             }
         };
-        fetchTrips();
+        fetchRadar();
     }, []);
-
-    const blackOptions = { color: 'black' }
-
-    // console.log(trips);
 
     return (
         <div className="map-container">
@@ -90,9 +41,8 @@ function Map() {
                 })} */}
 
                 <LayerGroup>
-                    {trips.map((trip) => {
-                        return <Vehicle trip={trip} />
-
+                    {movements.map((mov) => {
+                        return <Vehicle movement={mov} key={mov.tripId} />
                     })}
                 </LayerGroup>
 

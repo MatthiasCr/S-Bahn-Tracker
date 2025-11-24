@@ -87,7 +87,7 @@ export const getCurrentTrips = async () => {
 
 export type Movement = {
     direction: string;
-    trip_id: string;
+    tripId: string;
     line: {
         name: string;
         mode: string;
@@ -115,12 +115,13 @@ export const radar = async (): Promise<Movement[]> => {
         west: "13.30002",
         south: "52.51942",
         east: "13.41709",
-        results: "10"
+        results: "10",
+        suburban: "true",
+        subway: "true",
+        regional: "true"
     });
 
-    const response = await fetch(`/api/radar${params.toString()}`);
+    const response = await fetch(`/api/radar?${params.toString()}`);
     const data = await response.json();
-
-    console.log(data);
     return data.movements as Movement[];
 };
