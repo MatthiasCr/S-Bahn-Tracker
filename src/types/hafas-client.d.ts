@@ -1,4 +1,5 @@
 declare module 'hafas-client' {
+
     export type BoundingBox = {
         north: number;
         west: number;
@@ -10,6 +11,7 @@ declare module 'hafas-client' {
 
     export type RadarOptions = {
         results?: number;
+        frames?: number;
         products?: ProductSelection;
     };
 
@@ -20,8 +22,22 @@ declare module 'hafas-client' {
         realtimeDataUpdatedAt?: number | null;
     };
 
+    export type TripOptions = {
+        stopovers: boolean,
+        polyline: boolean,
+        subStops: boolean,
+        entrances: boolean,
+        remarks: boolean
+    }
+
+    export type TripResponse = {
+        trip: Trip;
+        realtimeDataUpdatedAt?: number | null;
+    }
+
     export interface HafasClient {
         radar(bbox: BoundingBox, opt?: RadarOptions): Promise<RadarResponse>;
+        trip(tripId: string, opt?: TripOptions): Promise<TripResponse>;
     }
 
     export type Profile = {

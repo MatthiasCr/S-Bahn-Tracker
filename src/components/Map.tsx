@@ -1,11 +1,12 @@
 import 'leaflet/dist/leaflet.css';
 import '../css/Map.css';
 import { MapContainer, TileLayer, LayerGroup, useMap } from 'react-leaflet';
-import { type Movement, radar } from '../services/api'
+import { type Movement, type Trip, radar, trip } from '../services/api'
 import { useState, useEffect } from 'react';
 import Vehicle from './Vehicle';
+import TripLine from './TripLine';
 
-function MyMapContainer() {
+function Map() {
     return (
         <MapContainer
             center={[52.517275, 13.381406]}
@@ -13,18 +14,18 @@ function MyMapContainer() {
             scrollWheelZoom={true}
             style={{ width: '100%', height: '100%' }}
         >
-            <Map />
+            <MapLayers />
         </MapContainer>
     );
 }
-export default MyMapContainer;
+export default Map;
 
 
-function Map() {
+function MapLayers() {
 
     const leafletMap = useMap();
-
     const [movements, setMovements] = useState<Movement[]>([]);
+    const [activeTrip, setActiveTrip] = useState<Trip | null>(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -67,9 +68,15 @@ function Map() {
         };
     }, [leafletMap]);
 
+
+    const onVehicleClick = async (tripId: string) => {
+        const t = await trip(tripId);
+        setActiveTrip(t);
+        console.log(t);
+    }
+
     return (
         <div className="map-container">
-            {/* <MapContainer center={[52.517275, 13.381406]} zoom={15} scrollWheelZoom={true}> */}
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -89,12 +96,11 @@ function Map() {
 
             <LayerGroup>
                 {movements.map((mov) => {
-                    return <Vehicle movement={mov} key={mov.tripId} />
+                    return <Vehicle movement={mov} onVehicleClick={onVehicleClick} key={mov.tripId} />
                 })}
             </LayerGroup>
 
-            {/* <Polyline pathOptions={blackOptions} positions={shape} /> */}
-            {/* </MapContainer> */}
+            {activeTrip != null && <TripLine trip={activeTrip} />}
 
         </div>
     );

@@ -144,3 +144,16 @@ export const radar = async (bbox: LatLngBounds): Promise<Movement[]> => {
     }
     return data.movements;
 };
+
+export const trip = async (tripId: string) => {
+    const params = new URLSearchParams({
+        tripId: tripId
+    });
+
+    const response = await fetch(`/api/trip?${params.toString()}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch radar: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.trip;
+}
