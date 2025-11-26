@@ -1,33 +1,80 @@
 import 'leaflet/dist/leaflet.css';
 import '../css/Map.css';
-import { MapContainer, TileLayer, LayerGroup } from 'react-leaflet';
+import { MapContainer, TileLayer, LayerGroup, useMap } from 'react-leaflet';
 import { type Movement, radar } from '../services/api'
 import { useState, useEffect } from 'react';
 import Vehicle from './Vehicle';
 
+function MyMapContainer() {
+    return (
+        <MapContainer
+            center={[52.517275, 13.381406]}
+            zoom={15}
+            scrollWheelZoom={true}
+            style={{ width: '100%', height: '100%' }}
+        >
+            <Map />
+        </MapContainer>
+    );
+}
+export default MyMapContainer;
+
+
 function Map() {
+
+    const leafletMap = useMap();
+
     const [movements, setMovements] = useState<Movement[]>([]);
 
     useEffect(() => {
+        let isMounted = true;
+        let intervalId: ReturnType<typeof setInterval> | null = null;
+
         const fetchRadar = async () => {
+            if (!isMounted) return;
+
+            const size = leafletMap.getSize();
+            if (size.x === 0 || size.y === 0) {
+                leafletMap.invalidateSize();
+                return;
+            }
+
+            const bounds = leafletMap.getBounds();
+
             try {
-                const data = await radar();
-                setMovements(data);
+                const data = await radar(bounds);
+                if (isMounted) {
+                    setMovements(data);
+                }
             } catch (error) {
+                setMovements([]);
                 console.error('Unable to load radar', error);
             }
         };
-        fetchRadar();
-    }, []);
+
+        const startPolling = () => {
+            fetchRadar();
+            intervalId = setInterval(fetchRadar, 20000); // 20s
+        };
+
+        leafletMap.whenReady(startPolling);
+
+        return () => {
+            isMounted = false;
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [leafletMap]);
 
     return (
         <div className="map-container">
-            <MapContainer center={[52.517275, 13.381406]} zoom={15} scrollWheelZoom={true}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {/* {stations.map((station) => {
+            {/* <MapContainer center={[52.517275, 13.381406]} zoom={15} scrollWheelZoom={true}> */}
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {/* {stations.map((station) => {
                     if (!station.location) return null;
 
                     return (
@@ -40,17 +87,15 @@ function Map() {
                     );
                 })} */}
 
-                <LayerGroup>
-                    {movements.map((mov) => {
-                        return <Vehicle movement={mov} key={mov.tripId} />
-                    })}
-                </LayerGroup>
+            <LayerGroup>
+                {movements.map((mov) => {
+                    return <Vehicle movement={mov} key={mov.tripId} />
+                })}
+            </LayerGroup>
 
-                {/* <Polyline pathOptions={blackOptions} positions={shape} /> */}
-            </MapContainer>
+            {/* <Polyline pathOptions={blackOptions} positions={shape} /> */}
+            {/* </MapContainer> */}
 
         </div>
     );
 }
-
-export default Map;

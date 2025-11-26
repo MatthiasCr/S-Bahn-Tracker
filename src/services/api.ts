@@ -1,3 +1,5 @@
+import type { LatLngBounds } from "leaflet";
+
 const BASE_URL = 'https://v6.vbb.transport.rest';
 
 
@@ -108,20 +110,37 @@ export type Movement = {
     };
 };
 
-export const radar = async (): Promise<Movement[]> => {
+type RadarResponse = {
+    movements?: Movement[];
+};
+
+export const radar = async (bbox: LatLngBounds): Promise<Movement[]> => {
+
+    const north = bbox.getNorth() ?? 52.52411;
+    const east = bbox.getEast() ?? 13.41709;
+    const south = bbox.getSouth() ?? 52.51942;
+    const west = bbox.getWest() ?? 13.30002;
 
     const params = new URLSearchParams({
-        north: "52.52411",
-        west: "13.30002",
-        south: "52.51942",
-        east: "13.41709",
-        results: "10",
+        north: north.toString(),
+        west: west.toString(),
+        south: south.toString(),
+        east: east.toString(),
+        results: "200",
+        frames: "1",
         suburban: "true",
-        subway: "true",
-        regional: "true"
+        subway: "false",
+        regional: "false"
     });
 
     const response = await fetch(`/api/radar?${params.toString()}`);
-    const data = await response.json();
-    return data.movements as Movement[];
+    if (!response.ok) {
+        throw new Error(`Failed to fetch radar: ${response.status}`);
+    }
+
+    const data = await response.json() as RadarResponse;
+    if (!Array.isArray(data.movements)) {
+        return [];
+    }
+    return data.movements;
 };
