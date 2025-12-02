@@ -1,5 +1,7 @@
 import type { LatLngBounds } from "leaflet";
 
+const API_KEY = import.meta.env.VITE_API_KEY as string | undefined;
+
 export type Products = {
     suburban: boolean,
     subway: boolean,
@@ -108,7 +110,12 @@ export const radar = async (bbox: LatLngBounds): Promise<Movement[]> => {
         regional: "false"
     });
 
-    const response = await fetch(`/api/radar?${params.toString()}`);
+    const headers: HeadersInit = {};
+    if (API_KEY) {
+        headers['x-api-key'] = API_KEY;
+    }
+
+    const response = await fetch(`/api/radar?${params.toString()}`, { headers });
     if (!response.ok) {
         throw new Error(`Failed to fetch radar: ${response.status}`);
     }
@@ -125,7 +132,12 @@ export const trip = async (tripId: string): Promise<Trip> => {
         tripId: tripId
     });
 
-    const response = await fetch(`/api/trip?${params.toString()}`);
+    const headers: HeadersInit = {};
+    if (API_KEY) {
+        headers['x-api-key'] = API_KEY;
+    }
+
+    const response = await fetch(`/api/trip?${params.toString()}`, { headers });
     if (!response.ok) {
         throw new Error(`Failed to fetch radar: ${response.status}`);
     }

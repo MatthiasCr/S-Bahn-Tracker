@@ -8,6 +8,13 @@ const client = createClient(bvgProfile, userAgent)
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
+        const apiKey = process.env.API_KEY;
+        const providedKey = Array.isArray(req.headers['x-api-key']) ? req.headers['x-api-key'][0] : req.headers['x-api-key'];
+
+        if (!apiKey || providedKey !== apiKey) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
         const {
             north = "52.52411",
             west = "13.30002",
