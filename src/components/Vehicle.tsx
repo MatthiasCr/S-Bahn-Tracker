@@ -1,4 +1,4 @@
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup, Tooltip } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { type Movement } from '../services/api'
 import sBahnIconUrl from '../assets/s-bahn.svg';
@@ -28,7 +28,8 @@ function Vehicle({
                     },
                 }}
             >
-                <Popup>{movement.line.name}<br />{movement.direction}</Popup>
+                <Tooltip direction="bottom" offset={[0, 10]}>{movement.line.name} {movement.direction}</Tooltip>
+                {/* <Popup>{movement.line.name}<br />{movement.direction}</Popup> */}
             </Marker>
         </>
     )

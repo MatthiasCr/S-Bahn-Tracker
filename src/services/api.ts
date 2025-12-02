@@ -1,4 +1,4 @@
-import type { LatLngBounds } from "leaflet";
+import type { LatLngBounds, Polyline } from "leaflet";
 
 export type Products = {
     suburban: boolean,
@@ -8,14 +8,14 @@ export type Products = {
     ferry: boolean,
     express: boolean,
     regional: boolean,
-}
+};
 
 export type Location = {
     id: string,
     type: string,
     latitude: number,
     longitude: number,
-}
+};
 
 export type Stop = {
     id: string,
@@ -27,7 +27,7 @@ export type Stop = {
 export type Stopover = {
     stop: Stop,
     // arrival, departure, delay ...    
-}
+};
 
 export type Line = {
     type: string,
@@ -37,7 +37,7 @@ export type Line = {
     productName: string,
     mode: string,
     product: string,
-}
+};
 
 export type Trip = {
     id: string;
@@ -64,29 +64,25 @@ export type PolyLineFeature = {
         type: string,
         coordinates: number[]
     },
-}
+};
 
 export type Movement = {
-    direction: string;
-    tripId: string;
+    direction: string,
+    tripId: string,
     line: {
-        name: string;
-        mode: string;
-        product: string;
+        name: string,
+        mode: string,
+        product: string,
     },
     location: {
-        type: string;
-        latitude: number;
-        longitude: number;
+        type: string,
+        latitude: number,
+        longitude: number,
     },
     polyline: {
-        type: string;
-        features: {
-            geometry: {
-                coordinates: number[];
-            };
-        }[];
-    };
+        type: string,
+        features: PolyLineFeature[],
+    },
 };
 
 type RadarResponse = {
