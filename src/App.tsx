@@ -1,12 +1,24 @@
 import './css/App.css'
+import Navbar from './components/Navbar';
 import Map from './components/Map'
+import { useState } from 'react';
 
 function App() {
 
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleRefresh = () => {
+    setRefreshKey((key) => key + 1);
+  }
+
   return (
-    <div className="app-root">
-      <Map />
+    <div className="app">
+      <Navbar onRefresh={handleRefresh} />
+      <main className="content">
+        <Map refreshKey={refreshKey} />
+      </main>
     </div>
+
   )
 }
 

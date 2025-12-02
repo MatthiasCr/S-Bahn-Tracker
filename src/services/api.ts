@@ -1,4 +1,4 @@
-import type { LatLngBounds, Polyline } from "leaflet";
+import type { LatLngBounds } from "leaflet";
 
 export type Products = {
     suburban: boolean,

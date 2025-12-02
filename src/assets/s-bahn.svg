@@ -6,7 +6,7 @@
  preserveAspectRatio="xMidYMid meet">
 
 <!-- White background circle -->
-<circle cx="1024" cy="1024" r="1024" fill="#ffffff" />
+<circle cx="1024" cy="1024" r="1000" fill="#ffffff" />
 
 <g transform="translate(0,2048) scale(0.1,-0.1)" fill="#009154" stroke="none">
   <path d="M9864 20469 c-2351 -82 -4605 -982 -6379 -2544 -1567

@@ -2,57 +2,59 @@ import 'leaflet/dist/leaflet.css';
 import '../css/Map.css';
 import { MapContainer, TileLayer, LayerGroup, useMap } from 'react-leaflet';
 import { type Movement, type Trip, radar, trip } from '../services/api'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Vehicle from './Vehicle';
 import TripLine from './TripLine';
 
-function Map() {
+function Map({ refreshKey }: { refreshKey: number }) {
     return (
         <MapContainer
+            className="map-container"
             center={[52.517275, 13.381406]}
             zoom={15}
             scrollWheelZoom={true}
-            style={{ width: '100%', height: '100%' }}
+            zoomControl={false}
         >
-            <MapLayers />
+            <MapLayers refreshKey={refreshKey} />
         </MapContainer>
     );
 }
 export default Map;
 
 
-function MapLayers() {
+function MapLayers({ refreshKey }: { refreshKey: number }) {
 
     const leafletMap = useMap();
+    const [loading, setLoading] = useState<boolean>(false);
+
     const [movements, setMovements] = useState<Movement[]>([]);
     const [activeTrip, setActiveTrip] = useState<Trip | null>(null);
 
+    const fetchRadar = useCallback(async () => {
+        setLoading(true);
+
+        const size = leafletMap.getSize();
+        if (size.x === 0 || size.y === 0) {
+            leafletMap.invalidateSize();
+            setLoading(false);
+            return;
+        }
+
+        const bounds = leafletMap.getBounds();
+
+        try {
+            const data = await radar(bounds);
+            setMovements(data);
+        } catch (error) {
+            setMovements([]);
+            console.error('Unable to load radar', error);
+        } finally {
+            setLoading(false);
+        }
+    }, [leafletMap]);
+
     useEffect(() => {
-        let isMounted = true;
         let intervalId: ReturnType<typeof setInterval> | null = null;
-
-        const fetchRadar = async () => {
-            if (!isMounted) return;
-
-            const size = leafletMap.getSize();
-            if (size.x === 0 || size.y === 0) {
-                leafletMap.invalidateSize();
-                return;
-            }
-
-            const bounds = leafletMap.getBounds();
-
-            try {
-                const data = await radar(bounds);
-                if (isMounted) {
-                    console.log(data);
-                    setMovements(data);
-                }
-            } catch (error) {
-                setMovements([]);
-                console.error('Unable to load radar', error);
-            }
-        };
 
         const startPolling = () => {
             fetchRadar();
@@ -62,12 +64,15 @@ function MapLayers() {
         leafletMap.whenReady(startPolling);
 
         return () => {
-            isMounted = false;
             if (intervalId) {
                 clearInterval(intervalId);
             }
         };
-    }, [leafletMap]);
+    }, [leafletMap, fetchRadar]);
+
+    useEffect(() => {
+        fetchRadar();
+    }, [refreshKey, fetchRadar]);
 
 
     const onVehicleClick = async (tripId: string) => {
@@ -76,23 +81,12 @@ function MapLayers() {
     }
 
     return (
-        <div className="map-container">
+        <>
+            {loading && <div className="map-loading">Loading...</div>}
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {/* {stations.map((station) => {
-                    if (!station.location) return null;
-
-                    return (
-                        <Marker
-                            key={station.id}
-                            position={[station.location.latitude, station.location.longitude]}
-                        >
-                            <Popup>{station.name}</Popup>
-                        </Marker>
-                    );
-                })} */}
 
             <LayerGroup>
                 {movements.map((mov) => {
@@ -101,7 +95,6 @@ function MapLayers() {
             </LayerGroup>
 
             {activeTrip != null && <TripLine trip={activeTrip} />}
-
-        </div>
+        </>
     );
 }
