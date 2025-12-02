@@ -16,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             results = "5",
             duration = "30",
             frames = "1",
-            polylines = "false",
+            polylines = "true",
             subStops = "false",
             entrances = "false",
             suburban = "true",

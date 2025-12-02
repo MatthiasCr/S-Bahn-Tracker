@@ -45,6 +45,7 @@ function MapLayers() {
             try {
                 const data = await radar(bounds);
                 if (isMounted) {
+                    console.log(data);
                     setMovements(data);
                 }
             } catch (error) {
@@ -55,7 +56,7 @@ function MapLayers() {
 
         const startPolling = () => {
             fetchRadar();
-            intervalId = setInterval(fetchRadar, 20000); // 20s
+            intervalId = setInterval(fetchRadar, 60000); // 60s
         };
 
         leafletMap.whenReady(startPolling);
@@ -72,7 +73,6 @@ function MapLayers() {
     const onVehicleClick = async (tripId: string) => {
         const t = await trip(tripId);
         setActiveTrip(t);
-        console.log(t);
     }
 
     return (

@@ -1,90 +1,69 @@
 import type { LatLngBounds } from "leaflet";
 
-const BASE_URL = 'https://v6.vbb.transport.rest';
+export type Products = {
+    suburban: boolean,
+    subway: boolean,
+    tram: boolean,
+    bus: boolean,
+    ferry: boolean,
+    express: boolean,
+    regional: boolean,
+}
 
-
-export type Station = {
+export type Location = {
     id: string,
-    name: string,
-    location?: {
-        latitude: number;
-        longitude: number;
-    };
-};
-
-
-type NearestStationsResponse = Station[];
-
-export const getNearestStations = async (
+    type: string,
     latitude: number,
     longitude: number,
-    numberOfStations: number,
-): Promise<NearestStationsResponse> => {
-    const params = new URLSearchParams({
-        latitude: latitude.toString(),
-        longitude: longitude.toString(),
-        results: numberOfStations.toString(),
-        stops: 'true',
-        poi: 'false',
-        linesOfStops: 'false',
-        language: 'en',
-    });
+}
 
-    const response = await fetch(`${BASE_URL}/locations/nearby?${params.toString()}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch nearest stations: ${response.status}`);
-    }
-    return response.json() as Promise<NearestStationsResponse>;
+export type Stop = {
+    id: string,
+    name: string,
+    location: Location,
+    products: Products,
 };
 
-type ShapeRespnse = [][];
+export type Stopover = {
+    stop: Stop,
+    // arrival, departure, delay ...    
+}
 
-export const getShape = async (): Promise<ShapeRespnse> => {
-
-    const response = await fetch(`${BASE_URL}/shapes/392`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch shape: ${response.status}`);
-    }
-    return response.json() as Promise<ShapeRespnse>;
-};
+export type Line = {
+    type: string,
+    id: string,
+    fahrtnummer: string,
+    name: string,
+    productName: string,
+    mode: string,
+    product: string,
+}
 
 export type Trip = {
     id: string;
-    name: string;
-    currentLocation: {
-        latitude: number;
-        longitude: number;
-    },
-    origin: Station,
-    destination: Station,
-    line: {
+    origin: Stop,
+    destination: Stop,
+    direction: string,
+    line: Line,
+    departure: string,
+    plannedDeparture: string,
+    departureDelay: number,
+    arrival: string,
+    plannedArrival: string,
+    stopovers: Stopover[],
+    polyline: {
         type: string,
-        id: string,
-        fahrtnummer: string,
-        name: string,
-        color: {
-            fg: string,
-            bg: string,
-        }
+        features: PolyLineFeature[]
     },
-    direction: string
 };
 
-export const getCurrentTrips = async () => {
-    const params = new URLSearchParams({
-        query: '*',
-        onlyCurrentlyRunning: 'true',
-        // lineName: '',
-        product: 'suburban',
-        operatorNames: 'S-Bahn Berlin GmbH',
-        stopovers: 'false',
-        language: 'en',
-    });
-
-    const response = await fetch(`${BASE_URL}/trips?${params.toString()}`);
-    const data = await response.json();
-    console.log(data);
-    return data;
+export type PolyLineFeature = {
+    type: string,
+    properties?: Stop,
+    geometry: {
+        type: string,
+        coordinates: number[]
+    },
 }
 
 export type Movement = {
@@ -145,7 +124,7 @@ export const radar = async (bbox: LatLngBounds): Promise<Movement[]> => {
     return data.movements;
 };
 
-export const trip = async (tripId: string) => {
+export const trip = async (tripId: string): Promise<Trip> => {
     const params = new URLSearchParams({
         tripId: tripId
     });

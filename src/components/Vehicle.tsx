@@ -1,5 +1,14 @@
-import { Circle, Popup } from 'react-leaflet';
+import { Marker, Popup } from 'react-leaflet';
+import { Icon } from 'leaflet';
 import { type Movement } from '../services/api'
+import sBahnIconUrl from '../assets/s-bahn.svg';
+
+const vehicleIcon = new Icon({
+    iconUrl: sBahnIconUrl,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+});
 
 function Vehicle({
     movement,
@@ -10,9 +19,9 @@ function Vehicle({
 }) {
     return (
         <>
-            <Circle
-                center={[movement.location.latitude, movement.location.longitude]}
-                radius={150}
+            <Marker
+                position={[movement.location.latitude, movement.location.longitude]}
+                icon={vehicleIcon}
                 eventHandlers={{
                     click: (_) => {
                         onVehicleClick(movement.tripId)
@@ -20,7 +29,7 @@ function Vehicle({
                 }}
             >
                 <Popup>{movement.line.name}<br />{movement.direction}</Popup>
-            </Circle>
+            </Marker>
         </>
     )
 }
