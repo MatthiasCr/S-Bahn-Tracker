@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { createClient } from 'hafas-client'
 import { profile as bvgProfile } from 'hafas-client/p/bvg/index.js'
 
-const userAgent = 'matthias.cram@gmail.com'
+const userAgent = 's-bahn-tracker'
 const client = createClient(bvgProfile, userAgent)
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

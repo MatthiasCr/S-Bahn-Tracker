@@ -1,4 +1,5 @@
-import { Marker, Popup, Tooltip } from 'react-leaflet';
+import { useState } from 'react';
+import { Marker, CircleMarker, Tooltip } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { type Movement } from '../services/api'
 import sBahnIconUrl from '../assets/s-bahn.svg';
@@ -17,8 +18,19 @@ function Vehicle({
     movement: Movement,
     onVehicleClick: Function
 }) {
+
+    const [focus, setFocus] = useState<boolean>(false);
+
     return (
         <>
+            {focus && (
+                <CircleMarker
+                    center={[movement.location.latitude, movement.location.longitude]}
+                    radius={22}
+                    pathOptions={{ color: '#009154', fillColor: '#009154', fillOpacity: 0.4, stroke: false }}
+                    interactive={false}
+                />
+            )}
             <Marker
                 position={[movement.location.latitude, movement.location.longitude]}
                 icon={vehicleIcon}
@@ -26,11 +38,16 @@ function Vehicle({
                     click: (_) => {
                         onVehicleClick(movement.tripId)
                     },
+                    mouseover: (_) => {
+                        setFocus(true);
+                    },
+                    mouseout: (_) => {
+                        setFocus(false);
+                    },
                 }}
             >
                 <Tooltip direction="bottom" offset={[0, 10]}>{movement.line.name} {movement.direction}</Tooltip>
-                {/* <Popup>{movement.line.name}<br />{movement.direction}</Popup> */}
-            </Marker>
+            </Marker >
         </>
     )
 }

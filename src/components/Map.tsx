@@ -57,7 +57,6 @@ function MapLayers({ refreshKey }: { refreshKey: number }) {
         let intervalId: ReturnType<typeof setInterval> | null = null;
 
         const startPolling = () => {
-            fetchRadar();
             intervalId = setInterval(fetchRadar, 60000); // 60s
         };
 
@@ -76,8 +75,15 @@ function MapLayers({ refreshKey }: { refreshKey: number }) {
 
 
     const onVehicleClick = async (tripId: string) => {
-        const t = await trip(tripId);
-        setActiveTrip(t);
+        setLoading(true);
+        try {
+            const t = await trip(tripId);
+            setActiveTrip(t);
+        } catch (error) {
+            setActiveTrip(null);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

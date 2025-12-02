@@ -39,9 +39,11 @@ function TripLine({ trip }: { trip: Trip }) {
     return (
         <>
             <Polyline positions={positions} pathOptions={{ weight: 8, color: '#009154' }} />
-            {stops.map((stop) => (
+            {stops.map((stop, index) => (
+                // Ringbahn trips sometimes have the same stop twice
+                // That means the stop.id alone is not always unique and can not be used as key
                 <CircleMarker
-                    key={stop.id}
+                    key={`${stop.id}-${index}`}
                     center={[stop.location.latitude, stop.location.longitude]}
                     radius={7}
                     pathOptions={{ weight: 4, color: '#009154', fillColor: '#fff', fillOpacity: 1 }}
