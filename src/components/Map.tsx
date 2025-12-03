@@ -5,6 +5,7 @@ import { type Movement, type Trip, radar, trip } from '../services/api'
 import { useState, useEffect, useCallback } from 'react';
 import Vehicle from './Vehicle';
 import TripLine from './TripLine';
+import DetailPane from './DetailPane';
 
 function Map({ refreshKey }: { refreshKey: number }) {
     return (
@@ -86,21 +87,29 @@ function MapLayers({ refreshKey }: { refreshKey: number }) {
         }
     }
 
+    const onDetailPaneClose = () => {
+        setActiveTrip(null);
+    }
+
     return (
         <>
             {loading && <div className="map-loading">Loading...</div>}
+
+            {activeTrip && <DetailPane trip={activeTrip} onClose={onDetailPaneClose} />}
+
+
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-
             <LayerGroup>
                 {movements.map((mov) => {
                     return <Vehicle movement={mov} onVehicleClick={onVehicleClick} key={mov.tripId} />
                 })}
             </LayerGroup>
-
-            {activeTrip != null && <TripLine trip={activeTrip} />}
+            <LayerGroup>
+                {activeTrip != null && <TripLine trip={activeTrip} />}
+            </LayerGroup>
         </>
     );
 }

@@ -1,0 +1,53 @@
+.detail-pane {
+    position: absolute;
+    top: 5%;
+    right: 2.5%;
+    width: 15%;
+
+    background: rgba(255, 255, 255, 1);
+    color: #242424;
+    font-weight: 600;
+    font-size: 20px;
+
+    padding: 6px 12px;
+    border-radius: 3px;
+    font-weight: 600;
+    z-index: 1000;
+}
+
+
+.detail-pane-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-pane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.detail-pane-title {
+    display: flex;
+    align-items: center;
+}
+
+.line-logo {
+    height: 24px;
+    align-self: center;
+    margin-right: 10px;
+}
+
+.detail-pane-close-button {
+    border: none;
+    background: transparent;
+    color: #242424;
+    font-size: 24px;
+    cursor: pointer;
+    vertical-align: text-top;
+    padding: 0;
+}
+
+.detail-pane-close-button:hover {
+    color: #000;
+}

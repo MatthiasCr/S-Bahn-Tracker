@@ -11,13 +11,7 @@ const vehicleIcon = new Icon({
     popupAnchor: [0, -16],
 });
 
-function Vehicle({
-    movement,
-    onVehicleClick
-}: {
-    movement: Movement,
-    onVehicleClick: Function
-}) {
+function Vehicle({ movement, onVehicleClick }: { movement: Movement, onVehicleClick: Function }) {
 
     const [focus, setFocus] = useState<boolean>(false);
 
