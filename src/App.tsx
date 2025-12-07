@@ -6,6 +6,7 @@ import { useState } from 'react';
 function App() {
 
   const [refreshKey, setRefreshKey] = useState(0);
+  const [movementCount, setMovementCount] = useState(0);
 
   const handleRefresh = () => {
     setRefreshKey((key) => key + 1);
@@ -13,9 +14,9 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar onRefresh={handleRefresh} />
+      <Navbar onRefresh={handleRefresh} movementCount={movementCount} />
       <main className="content">
-        <Map refreshKey={refreshKey} />
+        <Map refreshKey={refreshKey} onMovementsChange={setMovementCount} />
       </main>
     </div>
 

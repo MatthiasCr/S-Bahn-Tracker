@@ -1,7 +1,7 @@
 import '../css/Navbar.css'
 import sBahnIconUrl from '../assets/s-bahn.svg';
 
-function Navbar({ onRefresh }: { onRefresh?: () => void }) {
+function Navbar({ onRefresh, movementCount = 0 }: { onRefresh: () => void, movementCount: number }) {
     return (
         <>
             <nav className="navbar">
@@ -11,11 +11,14 @@ function Navbar({ onRefresh }: { onRefresh?: () => void }) {
                         S-Bahn Tracker
                     </div>
                 </div>
-                {onRefresh && (
+                <div className="navbar-right">
+                    <div className="navbar-count" aria-label="Movement count">
+                        Rendering {movementCount} Vehicles
+                    </div>
                     <button className="navbar-refresh" onClick={onRefresh}>
                         Refresh
                     </button>
-                )}
+                </div>
             </nav>
         </>
     )

@@ -7,7 +7,7 @@ import Vehicle from './Vehicle';
 import TripLine from './TripLine';
 import DetailPane from './DetailPane';
 
-function Map({ refreshKey }: { refreshKey: number }) {
+function Map({ refreshKey, onMovementsChange }: { refreshKey: number, onMovementsChange: (count: number) => void }) {
     return (
         <MapContainer
             className="map-container"
@@ -16,14 +16,14 @@ function Map({ refreshKey }: { refreshKey: number }) {
             scrollWheelZoom={true}
             zoomControl={false}
         >
-            <MapLayers refreshKey={refreshKey} />
+            <MapLayers refreshKey={refreshKey} onMovementsChange={onMovementsChange} />
         </MapContainer>
     );
 }
 export default Map;
 
 
-function MapLayers({ refreshKey }: { refreshKey: number }) {
+function MapLayers({ refreshKey, onMovementsChange }: { refreshKey: number, onMovementsChange: (count: number) => void }) {
 
     const leafletMap = useMap();
     const [loading, setLoading] = useState<boolean>(false);
@@ -46,13 +46,15 @@ function MapLayers({ refreshKey }: { refreshKey: number }) {
         try {
             const data = await radar(bounds);
             setMovements(data);
+            onMovementsChange(data.length);
         } catch (error) {
             setMovements([]);
+            onMovementsChange(0);
             console.error('Unable to load radar', error);
         } finally {
             setLoading(false);
         }
-    }, [leafletMap]);
+    }, [leafletMap, onMovementsChange]);
 
     useEffect(() => {
         let intervalId: ReturnType<typeof setInterval> | null = null;
