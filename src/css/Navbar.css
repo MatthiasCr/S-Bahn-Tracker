@@ -4,9 +4,10 @@
     justify-content: space-between;
     padding: 12px 16px;
     gap: 12px;
+    position: relative;
 }
 
-.navbar-right {
+.navbar-actions {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -38,4 +39,46 @@
 
 .navbar-refresh:hover {
     background-color: #007a45;
+}
+
+.navbar-menu-toggle {
+    display: none;
+    font-size: 30px;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.navbar-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    background-color: #242424;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10000;
+}
+
+.navbar-menu.open {
+    display: flex;
+}
+
+@media (max-width: 640px) {
+    .navbar-actions {
+        display: none;
+    }
+
+    .navbar-menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .navbar-count {
+        text-align: left;
+    }
 }
