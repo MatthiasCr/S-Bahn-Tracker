@@ -52,7 +52,7 @@ export type Trip = {
     departureDelay: number,
     arrival: string,
     plannedArrival: string,
-    stopovers: Stopover[],
+    stopovers?: Stopover[],
     polyline: {
         type: string,
         features: PolyLineFeature[]
@@ -129,7 +129,8 @@ export const radar = async (bbox: LatLngBounds): Promise<Movement[]> => {
 
 export const trip = async (tripId: string): Promise<Trip> => {
     const params = new URLSearchParams({
-        tripId: tripId
+        tripId: tripId,
+        stopovers: 'true',
     });
 
     const headers: HeadersInit = {};

@@ -1,34 +1,52 @@
 .detail-pane {
     position: absolute;
     top: 5%;
-    right: 2.5%;
+    right: 20px;
+
+    min-width: 270px;
+    max-height: 90%;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
 
     background: rgba(255, 255, 255, 1);
     color: #242424;
-    font-weight: 600;
-    font-size: 20px;
-
     padding: 6px 12px;
     border-radius: 3px;
     font-weight: 600;
     z-index: 1000;
 }
 
+.stopovers-container {
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding-right: -17px;
+    box-sizing: content-box;
+    font-weight: 400;
 
-.detail-pane-content {
-    display: flex;
-    flex-direction: column;
+    margin-top: 20px;
+}
+
+.stopover {
+    font-size: 16px;
+    border-left: solid;
+    border-width: 4px;
+    border-color: #009154;
+    padding-left: 10px;
 }
 
 .detail-pane-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-size: x-large;
+    font-weight: 600;
+
 }
 
 .detail-pane-title {
     display: flex;
-    align-items: center;
 }
 
 .line-logo {
@@ -41,10 +59,15 @@
     border: none;
     background: transparent;
     color: #242424;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     vertical-align: text-top;
     padding: 0;
+}
+
+.direction {
+    font-size: large;
+    font-weight: 600;
 }
 
 .detail-pane-close-button:hover {
@@ -53,8 +76,15 @@
 
 @media (max-width: 640px) {
     .detail-pane {
-        right: 0;
-        top: 0;
+        bottom: 0;
+        width: -moz-available;
+        padding-bottom: 20px;
+        top: auto;
+        right: auto;
+    }
+
+    .stopovers-container {
+        display: none;
     }
 
 }

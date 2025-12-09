@@ -40,7 +40,7 @@ function Vehicle({ movement, onVehicleClick }: { movement: Movement, onVehicleCl
                     },
                 }}
             >
-                <Tooltip direction="bottom" offset={[0, 10]}>{movement.line.name} {movement.direction}</Tooltip>
+                <Tooltip direction="bottom" offset={[0, 10]}>{movement.line.name} {movement.direction.replace("(Berlin)", "")}</Tooltip>
             </Marker >
         </>
     )
