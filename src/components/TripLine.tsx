@@ -20,13 +20,17 @@ function TripLine({ trip }: { trip: Trip }) {
                 // so that the station marker will appear directly on the polyline
                 stop.location.latitude = lat;
                 stop.location.longitude = lng;
-                acc.stops.push(stop);
+                if (!acc.seenStopIds.has(stop.id)) {
+                    acc.seenStopIds.add(stop.id);
+                    acc.stops.push(stop);
+                }
             }
 
             return acc;
         }, {
             positions: [] as [number, number][],
             stops: [] as Stop[],
+            seenStopIds: new Set<Stop['id']>(),
         });
         setPositions(positions);
         setStops(stops);
@@ -39,11 +43,9 @@ function TripLine({ trip }: { trip: Trip }) {
     return (
         <>
             <Polyline positions={positions} pathOptions={{ weight: 8, color: '#009154' }} />
-            {stops.map((stop, index) => (
-                // Ringbahn trips sometimes have the same stop twice
-                // That means the stop.id alone is not always unique and can not be used as key
+            {stops.map((stop) => (
                 <CircleMarker
-                    key={`${stop.id}-${index}`}
+                    key={stop.id}
                     center={[stop.location.latitude, stop.location.longitude]}
                     radius={7}
                     pathOptions={{ weight: 4, color: '#009154', fillColor: '#fff', fillOpacity: 1 }}

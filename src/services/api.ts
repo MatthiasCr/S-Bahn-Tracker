@@ -28,7 +28,10 @@ export type Stop = {
 
 export type Stopover = {
     stop: Stop,
-    // arrival, departure, delay ...    
+    arrival: string,
+    arrivalDelay: number,
+    departure: string,
+    departureDelay: number
 };
 
 export type Line = {

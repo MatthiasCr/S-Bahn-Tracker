@@ -39,7 +39,11 @@ function DetailPane({ trip, onClose }: { trip: Trip, onClose: () => void }) {
                 onWheelCapture={(event) => event.stopPropagation()}
             >
                 {trip.stopovers && trip.stopovers.map((stopover) => (
-                    <DetailPaneStopover key={stopover.stop.id} stopover={stopover} />
+                    // Some trips (eg. Ringbahn) sometimes have the same stopover multiple times
+                    // That means the stop.id alone is not always unique and can not be used as key
+                    <DetailPaneStopover
+                        key={`${stopover.stop.id}-${stopover.arrival}`}
+                        stopover={stopover} />
                 ))}
             </div>
         </div>
