@@ -45,6 +45,13 @@ function MapLayers({ refreshKey, onMovementsChange }: { refreshKey: number, onMo
 
         try {
             const data = await radar(bounds);
+
+            // console.log(data);
+
+            // const json = JSON.stringify(data);
+            // const bytes = new Blob([json]).size;
+            // console.log(`Size: ${(bytes / 1024).toFixed(2)} KB`);
+
             setMovements(data);
             onMovementsChange(data.length);
         } catch (error) {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Marker, CircleMarker, Tooltip } from 'react-leaflet';
+import { Marker, CircleMarker, Tooltip, Polyline } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { type Movement } from '../services/api'
 import sBahnIconUrl from '../assets/s-bahn.svg';
@@ -14,6 +14,13 @@ const vehicleIcon = new Icon({
 function Vehicle({ movement, onVehicleClick }: { movement: Movement, onVehicleClick: Function }) {
 
     const [focus, setFocus] = useState<boolean>(false);
+
+    const positions = movement.polyline.features.map((feat) => {
+        const [lng, lat] = feat.geometry.coordinates;
+        if (lat != null && lng != null) {
+            return ([lat, lng]);
+        }
+    }) as [number, number][];
 
     return (
         <>
@@ -42,6 +49,11 @@ function Vehicle({ movement, onVehicleClick }: { movement: Movement, onVehicleCl
             >
                 <Tooltip direction="bottom" offset={[0, 10]}>{movement.line.name} {movement.direction.replace("(Berlin)", "")}</Tooltip>
             </Marker >
+            <Polyline
+                positions={positions}
+                pathOptions={{ weight: 8, color: '#000000ff' }}
+            />
+
         </>
     )
 }

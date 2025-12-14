@@ -107,7 +107,8 @@ export const radar = async (bbox: LatLngBounds): Promise<Movement[]> => {
         south: south.toString(),
         east: east.toString(),
         results: "200",
-        frames: "1",
+        duration: "60",
+        frames: "3",
         suburban: "true",
         subway: "false",
         regional: "false"

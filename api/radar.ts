@@ -21,8 +21,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             south = "52.51942",
             east = "13.41709",
             results = "5",
-            duration = "30",
-            frames = "1",
+            duration = "60",
+            frames = "6",
             polylines = "true",
             subStops = "false",
             entrances = "false",
@@ -30,6 +30,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             subway = "false",
             regional = "false"
         } = req.query;
+
+        console.log(req.query);
 
         const bbox = {
             north: parseFloat(north as string),
@@ -40,8 +42,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const opt = {
             results: parseInt(results as string, 10),
-            duration: parseFloat(duration as string),
-            frames: parseInt(frames as string),
+            duration: parseInt(duration as string, 10),
+            frames: parseInt(frames as string, 10),
             polylines: JSON.parse(polylines as string),
             subStops: JSON.parse(subStops as string),
             entrances: JSON.parse(entrances as string),
@@ -55,6 +57,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 express: false,
             },
         }
+
+        console.log(bbox);
+        console.log(opt);
+
 
         const data = await client.radar(bbox, opt);
         return res.status(200).json(data);
