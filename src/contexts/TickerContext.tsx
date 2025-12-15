@@ -14,11 +14,20 @@ function createTickerStore(): TickerStore {
     let timestamp = typeof performance !== 'undefined' ? performance.now() : 0;
     const listeners = new Set<Listener>();
 
+    // interval until next notification (next animation frame)
+    const interval = 1000 / 30;
+    let lastNotified = performance.now();
+
     const tick = (now: number) => {
-        timestamp = now;
-        listeners.forEach((listener) => listener());
+        if (now - lastNotified >= interval) {
+            // throttle animation to ~30 frames
+            lastNotified = now;
+            timestamp = now;
+            listeners.forEach((listener) => listener());
+        }
         frameId = requestAnimationFrame(tick);
     };
+
 
     const start = () => {
         if (frameId == null) {

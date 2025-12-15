@@ -47,7 +47,6 @@ function MapLayers({ refreshKey, onMovementsChange }: { refreshKey: number, onMo
             const data = await radar(bounds);
 
             // console.log(data);
-
             // const json = JSON.stringify(data);
             // const bytes = new Blob([json]).size;
             // console.log(`Size: ${(bytes / 1024).toFixed(2)} KB`);
@@ -105,7 +104,6 @@ function MapLayers({ refreshKey, onMovementsChange }: { refreshKey: number, onMo
             {loading && <div className="map-loading">Loading...</div>}
 
             {activeTrip && <DetailPane trip={activeTrip} onClose={onDetailPaneClose} />}
-
 
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
