@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Marker, CircleMarker, Tooltip, Polyline } from 'react-leaflet';
+import { Marker, CircleMarker, Tooltip, /*Polyline*/ } from 'react-leaflet';
 import { Icon, type Marker as LeafletMarker, type CircleMarker as LeafletCircleMarker } from 'leaflet';
 import { type Movement, type PolyLineFeature } from '../services/api'
 import sBahnIconUrl from '../assets/s-bahn.svg';
@@ -67,7 +67,7 @@ function Vehicle({ movement, onVehicleClick }: { movement: Movement, onVehicleCl
 
         return { positions: coords, segments: segs, segmentDuration, totalDurationMs };
     }, [movement]);
-    const { positions, segments, segmentDuration, totalDurationMs } = geometry;
+    const { /*positions,*/ segments, segmentDuration, totalDurationMs } = geometry;
 
 
 
