@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { createContext, useContext, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 
 type Listener = () => void;
 
@@ -70,4 +70,37 @@ export function useTicker(): number {
         throw new Error('useTicker must be used within a TickerProvider');
     }
     return useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
+}
+
+/**
+ * Variant that only re-renders when active is true. It always respects the
+ * Rules of Hooks but returns a frozen snapshot while inactive.
+ */
+export function useTickerWhen(active: boolean): number {
+    const store = useContext(TickerContext);
+    if (store == null) {
+        throw new Error('useTickerWhen must be used within a TickerProvider');
+    }
+    const lastRef = useRef(store.getSnapshot());
+
+    return useSyncExternalStore(
+        (listener) => {
+            if (!active) {
+                return () => { };
+            }
+            return store.subscribe(() => {
+                lastRef.current = store.getSnapshot();
+                listener();
+            });
+        },
+        () => {
+            if (active) {
+                const snapshot = store.getSnapshot();
+                lastRef.current = store.getSnapshot();;
+                return snapshot;
+            }
+            return lastRef.current;
+        },
+        () => lastRef.current
+    );
 }

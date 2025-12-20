@@ -3,7 +3,7 @@ import { Marker, CircleMarker, Tooltip, /*Polyline*/ } from 'react-leaflet';
 import { Icon, type Marker as LeafletMarker, type CircleMarker as LeafletCircleMarker } from 'leaflet';
 import { type Movement, type PolyLineFeature } from '../services/api'
 import sBahnIconUrl from '../assets/s-bahn.svg';
-import { useTicker } from '../contexts/TickerContext';
+import { useTickerWhen } from '../contexts/TickerContext';
 import { ANIMATION_TOTAL_DURATION_MS } from '../config/animation';
 
 const vehicleIcon = new Icon({
@@ -13,13 +13,26 @@ const vehicleIcon = new Icon({
     popupAnchor: [0, -16],
 });
 
-function Vehicle({ movement, onVehicleClick }: { movement: Movement, onVehicleClick: Function }) {
+function Vehicle(
+    {
+        movement,
+        onVehicleClick,
+        isVisible
+    }: {
+        movement: Movement,
+        onVehicleClick: Function,
+        isVisible: boolean
+    }) {
 
     // Mouseover
     const [focus, setFocus] = useState<boolean>(false);
 
-    // Animmation
-    const tickerNow = useTicker();
+    // Animation
+
+    // when visible tickerNow will change each tick to the latest timestamp
+    // when not visible it will be constant and therefore dont trigger animation
+    const tickerNow = useTickerWhen(isVisible);
+
     const markerRef = useRef<LeafletMarker | null>(null);
     const circleRef = useRef<LeafletCircleMarker | null>(null);
 
@@ -109,6 +122,9 @@ function Vehicle({ movement, onVehicleClick }: { movement: Movement, onVehicleCl
         }
     }, [animatedPosition]);
 
+    if (!isVisible) {
+        return <></>;
+    }
 
     return (
         <>
