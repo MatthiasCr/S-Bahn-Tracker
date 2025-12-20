@@ -1,4 +1,5 @@
-import type { LatLngBounds } from "leaflet";
+import type { LatLngBounds } from 'leaflet';
+import { ANIMATION_TOTAL_DURATION_S, ANIMATION_FRAMES } from '../config/animation';
 
 const API_KEY = import.meta.env.VITE_API_KEY as string | undefined;
 
@@ -107,7 +108,8 @@ export const radar = async (bbox: LatLngBounds): Promise<Movement[]> => {
         south: south.toString(),
         east: east.toString(),
         results: "200",
-        frames: "1",
+        duration: ANIMATION_TOTAL_DURATION_S.toString(),
+        frames: ANIMATION_FRAMES.toString(),
         suburban: "true",
         subway: "false",
         regional: "false"
