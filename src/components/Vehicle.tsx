@@ -4,7 +4,7 @@ import { Icon, type Marker as LeafletMarker, type CircleMarker as LeafletCircleM
 import { type Movement, type PolyLineFeature } from '../services/api'
 import sBahnIconUrl from '../assets/s-bahn.svg';
 import { useTickerWhen } from '../contexts/TickerContext';
-import { ANIMATION_TOTAL_DURATION_MS } from '../config/animation';
+import { ANIMATION_TOTAL_DURATION_MS } from '../config/constants';
 
 const vehicleIcon = new Icon({
     iconUrl: sBahnIconUrl,
