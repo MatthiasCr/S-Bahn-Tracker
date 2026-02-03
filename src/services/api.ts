@@ -1,5 +1,5 @@
 import type { LatLngBounds } from 'leaflet';
-import { ANIMATION_TOTAL_DURATION_S, ANIMATION_FRAMES } from '../config/animation';
+import { ANIMATION_TOTAL_DURATION_S, ANIMATION_FRAMES } from '../config/constants';
 
 const API_KEY = import.meta.env.VITE_API_KEY as string | undefined;
 

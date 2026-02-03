@@ -58,10 +58,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             },
         }
 
-        console.log(bbox);
-        console.log(opt);
-
-
         const data = await client.radar(bbox, opt);
         return res.status(200).json(data);
     } catch (err) {
