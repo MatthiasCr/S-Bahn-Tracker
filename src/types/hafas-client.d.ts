@@ -56,3 +56,8 @@ declare module 'hafas-client/p/bvg/index.js' {
     import type { Profile } from 'hafas-client';
     export const profile: Profile;
 }
+
+declare module 'hafas-client/p/vbb/index.js' {
+    import type { Profile } from 'hafas-client';
+    export const profile: Profile;
+}

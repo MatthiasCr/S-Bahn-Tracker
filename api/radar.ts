@@ -1,10 +1,11 @@
 // Vercel Node function
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { createClient } from 'hafas-client'
-import { profile as bvgProfile } from 'hafas-client/p/bvg/index.js'
+// import { profile } from 'hafas-client/p/bvg/index.js'
+import { profile } from 'hafas-client/p/vbb/index.js'
 
-const userAgent = 's-bahn-tracker'
-const client = createClient(bvgProfile, userAgent)
+const userAgent = 'https://github.com/MatthiasCr/S-Bahn-Tracker';
+const client = createClient(profile, userAgent);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
